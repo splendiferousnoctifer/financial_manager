@@ -1,47 +1,36 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <v-app>
+    <Home @data-loaded="setData" />
+    <v-container>
+      <v-row>
+        <v-col v-for="(value, month) in months" :key="month">
+          <v-btn @click="selectMonth(month)">{{ month }}</v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-app>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
+<script lang="ts">
+import { defineComponent } from 'vue';
+import Home from './components/Home.vue';
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+export default defineComponent({
+  components: {
+    Home
+  },
+  data() {
+    return {
+      months: {} as { [key: string]: any[] }
+    };
+  },
+  methods: {
+    setData(data: { [key: string]: any[] }) {
+      this.months = data;
+    },
+    selectMonth(month: string) {
+      this.$router.push({ name: 'MonthDetail', params: { month } });
+    }
   }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
+});
+</script>
